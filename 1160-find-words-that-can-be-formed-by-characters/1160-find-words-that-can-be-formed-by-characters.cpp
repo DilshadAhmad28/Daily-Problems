@@ -1,27 +1,30 @@
 class Solution {
 public:
     int countCharacters(vector<string>& words, string chars) {
-        unordered_map<char,int>mp;
-        for(char ch:chars){
-            mp[ch]++;
-        }
-        int ans=0;
-        for(string word:words){
-            unordered_map<char,int>mymp;
-            for(char c:word){
-                mymp[c]++;
-            }
-            bool temp=true;
-            for(auto& it:mymp){
-                if(mp[it.first]<it.second){
-                    temp=false;
+        vector<int> charCount(26, 0);
+        
+        // Count frequency of each character in chars
+        for (char c : chars)
+            charCount[c - 'a']++;
+        
+        int totalLength = 0;
+        
+        // Check each word
+        for (string word : words) {
+            vector<int> tempCount = charCount;
+            bool canForm = true;
+            
+            for (char c : word) {
+                if (--tempCount[c - 'a'] < 0) { // not enough of this char
+                    canForm = false;
                     break;
                 }
             }
-            if(temp){
-                ans+=word.size();
-            }
+            
+            if (canForm)
+                totalLength += word.size();
         }
-        return ans;
+        
+        return totalLength;
     }
 };
