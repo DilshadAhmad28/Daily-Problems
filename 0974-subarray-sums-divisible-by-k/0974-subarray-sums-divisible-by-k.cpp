@@ -1,22 +1,27 @@
 class Solution {
 public:
     int subarraysDivByK(vector<int>& nums, int k) {
-        int n = nums.size();
+        unordered_map<int, int> remainderFreq;
+        remainderFreq[0] = 1; // To handle subarrays starting from index 0
+        
+        int prefixSum = 0;
         int count = 0;
 
-        for (int i = 0; i < n; i++) {
-            int sum = 0;  // Initialize once for each starting index
-
-            for (int j = i; j < n; j++) {
-                sum += nums[j];  // Incrementally build the sum
-                
-                // Use modulo carefully to handle negatives
-                if (sum % k == 0) {
-                    count++;
-                }
+        for (int num : nums) {
+            prefixSum += num;
+            
+            int remainder = prefixSum % k;
+            if (remainder < 0)  // handle negative remainders
+                remainder += k;
+            
+            // If this remainder was seen before, add its frequency to count
+            if (remainderFreq.find(remainder) != remainderFreq.end()) {
+                count += remainderFreq[remainder];
             }
+            
+            remainderFreq[remainder]++;
         }
-
+        
         return count;
     }
 };
