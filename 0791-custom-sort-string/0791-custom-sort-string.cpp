@@ -1,19 +1,28 @@
 class Solution {
 public:
     string customSortString(string order, string s) {
-        string result = "";
-        unordered_map<int,int>mp;
-        for(auto &it : s){
-            mp[it]++;
+        unordered_map<char, int> freq;
+
+        // Count frequency of characters in s
+        for (char c : s) {
+            freq[c]++;
         }
-        for(auto &it : order){
-            if(mp.find(it) != mp.end())
-                result.append(mp[it], it);
-                mp.erase(it);
+
+        string result;
+
+        // Append characters based on custom order
+        for (char c : order) {
+            if (freq.count(c)) {
+                result.append(freq[c], c);
+                freq.erase(c);
+            }
         }
-        for(auto &it : mp){
-            result.append(it.second,it.first);
+
+        // Append remaining characters
+        for (auto &p : freq) {
+            result.append(p.second, p.first);
         }
+
         return result;
     }
 };
